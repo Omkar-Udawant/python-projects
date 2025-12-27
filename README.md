@@ -1,7 +1,28 @@
-# python-projects
-A collection of Python projects built to strengthen programming and problem-solving skills.
-## 📌 Project Organization
+# Habit Tracker (Pixela API)
 
-- Beginner Python projects are stored in a separate repository focused on fundamentals.
-- This repository contains intermediate and advanced Python projects.
-- Each project is documented with its own README and clean structure.
+A simple Python-based habit tracker using the Pixela API.  
+This project allows users to track daily habits (like cycling distance) by logging data as pixels on a Pixela graph.
+
+---
+
+## 🚀 Features
+
+- Create a Pixela user
+- Create a habit graph
+- Add daily habit data (pixels)
+- User-friendly CLI input for date and quantity
+- Clean, modular Python code
+- Ready for GitHub
+
+---
+
+## 🛠️ Tech Stack
+
+- Python 3
+- Requests library
+- Pixela REST API
+
+---
+
+## 📁 Project Structure
+

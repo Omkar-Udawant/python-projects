@@ -19,5 +19,4 @@ A secure Flask-based authentication system implementing **password hashing, salt
 ## 🛡️ Security Concepts Covered
 
 ### 🔹 Password Hashing
-Passwords are never stored in plain text. They are hashed using:
-
+Passwords are never stored in plain text. 

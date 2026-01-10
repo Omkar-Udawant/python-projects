@@ -7,7 +7,6 @@ class FlightData:
         self.out_date = out_date
         self.return_date = return_date
 
-
 def find_cheapest_flight(data):
     # Check if the "data" key exists and has any items
     if not data or "data" not in data or not data["data"]:

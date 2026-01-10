@@ -7,7 +7,6 @@ load_dotenv()
 
 SHEETY_PRICES_ENDPOINT = os.getenv("SHEETY_PRICES_ENDPOINT")
 
-
 class DataManager:
 
     def __init__(self):

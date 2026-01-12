@@ -26,5 +26,3 @@ This project uses **BeautifulSoup** for web scraping and **SMTP** for email noti
 
 ---
 
-## 📁 Project Structure
-

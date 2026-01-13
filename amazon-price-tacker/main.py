@@ -4,7 +4,6 @@ import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
-# ====================== CONFIGURATION ======================
 
 load_dotenv()
 
@@ -71,3 +70,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

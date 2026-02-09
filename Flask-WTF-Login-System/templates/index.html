@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <h1>Welcome 👋</h1>
+    <p class="lead">This is a secure login system built using Flask-WTF.</p>
+
+    <a href="{{ url_for('login') }}" class="btn btn-primary mt-3">
+        Go to Login
+    </a>
+</div>
+{% endblock %}

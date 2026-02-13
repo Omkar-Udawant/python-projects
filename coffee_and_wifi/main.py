@@ -12,6 +12,7 @@ app.secret_key = "ThisIsASecretKey"
 
 
 
+
 class CafeForm(FlaskForm):
     name = StringField("Cafe Name", validators=[DataRequired()])
     # make sure this is a proper URL

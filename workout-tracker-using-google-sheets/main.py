@@ -61,3 +61,4 @@ for exercise in result.get("exercises", []):
     )
 
     print(sheet_response.text)
+

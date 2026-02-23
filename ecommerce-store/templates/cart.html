@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Cart{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="page-title mb-4">
+        <i class="bi bi-bag"></i> Your Cart
+    </h1>
+
+    {% if cart_items %}
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="cart-items">
+                {% for item in cart_items %}
+                <div class="cart-item-card">
+                    <div class="cart-item-image">
+                        {% if item.product.image_url %}
+                        <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}">
+                        {% else %}
+                        <div class="cart-item-placeholder"><i class="bi bi-image"></i></div>
+                        {% endif %}
+                    </div>
+                    <div class="cart-item-details">
+                        <h4 class="cart-item-name">{{ item.product.name }}</h4>
+                        <p class="cart-item-price">${{ (item.product.price / 100) | round(2) }} each</p>
+                        <div class="cart-item-actions">
+                            <form action="{{ url_for('update_cart_quantity', cart_item_id=item.id) }}" method="POST" class="d-inline-flex align-items-center gap-2">
+                                <label class="small text-muted mb-0">Qty:</label>
+                                <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="99" class="form-control form-control-sm qty-input">
+                                <button type="submit" class="btn btn-sm btn-outline-secondary">Update</button>
+                            </form>
+                            <form action="{{ url_for('remove_from_cart', cart_item_id=item.id) }}" method="POST" class="d-inline ms-2" onsubmit="return confirm('Remove this item?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i> Remove
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="cart-item-total">
+                        ${{ ((item.product.price * item.quantity) / 100) | round(2) }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="cart-summary">
+                <h3 class="cart-summary-title">Order Summary</h3>
+                <div class="cart-summary-row">
+                    <span>Subtotal</span>
+                    <span>${{ (total / 100) | round(2) }}</span>
+                </div>
+                <hr>
+                <div class="cart-summary-row cart-summary-total">
+                    <span>Total</span>
+                    <span>${{ (total / 100) | round(2) }}</span>
+                </div>
+                <a href="{{ url_for('create_checkout_session') }}" class="btn btn-primary btn-lg w-100 mt-3">
+                    <i class="bi bi-credit-card"></i> Proceed to Checkout
+                </a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-cart">
+        <div class="empty-cart-icon">
+            <i class="bi bi-bag-x"></i>
+        </div>
+        <h3>Your cart is empty</h3>
+        <p class="text-muted">Add some products to get started.</p>
+        <a href="{{ url_for('home') }}" class="btn btn-primary">Browse Products</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

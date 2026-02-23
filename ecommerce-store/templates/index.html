@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Shop{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">Curated for the <span class="highlight">discerning</span> shopper</h1>
+            <p class="hero-subtitle">Premium products, exceptional quality. Discover your next favorite.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Products -->
+<section class="products-section py-5">
+    <div class="container">
+        <div class="products-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+            <h2 class="section-title mb-0">
+                {% if search %}Search: "{{ search }}"{% elif current_category_name %}{{ current_category_name }}{% else %}All Products{% endif %}
+            </h2>
+            <div class="products-toolbar d-flex flex-wrap gap-2 align-items-center">
+                {% if categories %}
+                <div class="category-pills d-flex flex-wrap gap-1">
+                    <a href="{{ url_for('home', q=search, sort=sort) }}" class="badge category-badge {% if not current_category %}active{% endif %}">All</a>
+                    {% for cat in categories %}
+                    <a href="{{ url_for('home', q=search, category=cat.slug, sort=sort) }}" class="badge category-badge {% if current_category == cat.slug %}active{% endif %}">{{ cat.name }}</a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <div class="sort-dropdown">
+                    <select class="form-select form-select-sm sort-select" onchange="location.href=this.value">
+                        <option value="{{ url_for('home', q=search, category=current_category, sort='default') }}" {% if sort == 'default' %}selected{% endif %}>Sort: Default</option>
+                        <option value="{{ url_for('home', q=search, category=current_category, sort='price_low') }}" {% if sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="{{ url_for('home', q=search, category=current_category, sort='price_high') }}" {% if sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                        <option value="{{ url_for('home', q=search, category=current_category, sort='rating') }}" {% if sort == 'rating' %}selected{% endif %}>Top Rated</option>
+                        <option value="{{ url_for('home', q=search, category=current_category, sort='name') }}" {% if sort == 'name' %}selected{% endif %}>Name A-Z</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        {% if products %}
+        <div class="row g-4">
+            {% for product in products %}
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+                <div class="product-card">
+                    <div class="product-image-wrap">
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}">
+                            {% if product.image_url %}
+                            <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image" loading="lazy">
+                            {% else %}
+                            <div class="product-image-placeholder">
+                                <i class="bi bi-image"></i>
+                            </div>
+                            {% endif %}
+                        </a>
+                        <div class="product-overlay">
+                            {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('add_to_cart', product_id=product.id, next=url_for('home')) }}" class="btn btn-add-cart">
+                                <i class="bi bi-bag-plus"></i> Add to Cart
+                            </a>
+                            {% else %}
+                            <a href="{{ url_for('login') }}" class="btn btn-add-cart">
+                                <i class="bi bi-box-arrow-in-right"></i> Login to Buy
+                            </a>
+                            {% endif %}
+                        </div>
+                        {% if product.rating and product.rating > 0 %}
+                        <div class="product-rating-badge">
+                            <i class="bi bi-star-fill"></i> {{ "%.1f"|format(product.rating) }} ({{ product.review_count or 0 }})
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">
+                            <a href="{{ url_for('product_detail', product_id=product.id) }}">{{ product.name }}</a>
+                        </h3>
+                        <p class="product-desc">{{ product.description[:80] }}{% if product.description|length > 80 %}...{% endif %}</p>
+                        <div class="product-footer">
+                            <span class="product-price">${{ (product.price / 100) | round(2) }}</span>
+                            {% if current_user.is_authenticated %}
+                            <div class="product-actions">
+                                <a href="{{ url_for('add_to_cart', product_id=product.id, next=url_for('home')) }}" class="btn btn-sm btn-outline-primary" title="Add to Cart">
+                                    <i class="bi bi-bag-plus"></i>
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p class="text-muted">No products found{% if search %} for "{{ search }}"{% endif %}.</p>
+            <a href="{{ url_for('home') }}" class="btn btn-outline-primary">View All Products</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

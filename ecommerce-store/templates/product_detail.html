@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-custom">
+            <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Shop</a></li>
+            {% if product.category %}
+            <li class="breadcrumb-item"><a href="{{ url_for('home', category=product.category.slug) }}">{{ product.category.name }}</a></li>
+            {% endif %}
+            <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="product-detail-image">
+                {% if product.image_url %}
+                <img src="{{ product.image_url }}" alt="{{ product.name }}" class="img-fluid rounded">
+                {% else %}
+                <div class="product-image-placeholder product-detail-placeholder">
+                    <i class="bi bi-image"></i>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="product-detail-info">
+                {% if product.category %}
+                <a href="{{ url_for('home', category=product.category.slug) }}" class="product-category-tag">{{ product.category.name }}</a>
+                {% endif %}
+                <h1 class="product-detail-title">{{ product.name }}</h1>
+                {% if product.rating and product.rating > 0 %}
+                <div class="product-detail-rating mb-2">
+                    <span class="stars">{% for i in range(5) %}<i class="bi bi-star-fill{% if i >= (product.rating|int) %} star-empty{% endif %}"></i>{% endfor %}</span>
+                    <span class="rating-text">{{ "%.1f"|format(product.rating) }} ({{ product.review_count or 0 }} reviews)</span>
+                </div>
+                {% endif %}
+                <p class="product-detail-price">${{ (product.price / 100) | round(2) }}</p>
+                <p class="product-detail-desc">{{ product.description }}</p>
+
+                <div class="product-detail-actions d-flex gap-2 flex-wrap">
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('add_to_cart', product_id=product.id, next=url_for('product_detail', product_id=product.id)) }}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-bag-plus"></i> Add to Cart
+                    </a>
+                    {% if in_wishlist %}
+                    <form action="{{ url_for('remove_from_wishlist', product_id=product.id) }}" method="POST" class="d-inline">
+                        <input type="hidden" name="next" value="{{ url_for('product_detail', product_id=product.id) }}">
+                        <button type="submit" class="btn btn-outline-danger btn-lg"><i class="bi bi-heart-fill"></i> Remove from Wishlist</button>
+                    </form>
+                    {% else %}
+                    <form action="{{ url_for('add_to_wishlist', product_id=product.id) }}" method="POST" class="d-inline">
+                        <input type="hidden" name="next" value="{{ url_for('product_detail', product_id=product.id) }}">
+                        <button type="submit" class="btn btn-outline-primary btn-lg"><i class="bi bi-heart"></i> Add to Wishlist</button>
+                    </form>
+                    {% endif %}
+                    {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">Login to Buy</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if related %}
+    <section class="related-products mt-5 pt-5">
+        <h2 class="section-title mb-4">You May Also Like</h2>
+        <div class="row g-4">
+            {% for p in related %}
+            <div class="col-6 col-md-3">
+                <div class="product-card">
+                    <div class="product-image-wrap">
+                        <a href="{{ url_for('product_detail', product_id=p.id) }}">
+                            {% if p.image_url %}
+                            <img src="{{ p.image_url }}" alt="{{ p.name }}" class="product-image" loading="lazy">
+                            {% else %}
+                            <div class="product-image-placeholder"><i class="bi bi-image"></i></div>
+                            {% endif %}
+                        </a>
+                        {% if p.rating and p.rating > 0 %}
+                        <div class="product-rating-badge">
+                            <i class="bi bi-star-fill"></i> {{ "%.1f"|format(p.rating) }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name"><a href="{{ url_for('product_detail', product_id=p.id) }}">{{ p.name }}</a></h3>
+                        <div class="product-footer">
+                            <span class="product-price">${{ (p.price / 100) | round(2) }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}

@@ -373,4 +373,6 @@ def run_migrations():
 # ---------------- RUN APP ----------------
 if __name__ == "__main__":
     run_migrations()
+
     app.run(debug=True)
+    

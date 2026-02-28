@@ -50,3 +50,6 @@ while game_should_continue:
         print(f"❌ Wrong answer!")
         print(f"🏁 Final Score: {score}")
         game_should_continue = False
+        print(f"❌ Wrong answer!")
+        print(f"🏁 Final Score: {score}")
+        game_should_continue = False

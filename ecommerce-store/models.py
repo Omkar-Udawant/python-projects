@@ -78,3 +78,4 @@ class OrderItem(db.Model):
     price = db.Column(db.Integer)  # price at time of purchase
 
     product = db.relationship("Product", backref="order_items", lazy=True)
+
